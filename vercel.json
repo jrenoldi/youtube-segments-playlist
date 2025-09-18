@@ -13,7 +13,7 @@
     },
     {
       "src": "/",
-      "dest": "/examples/karaokenator.html"
+      "dest": "/server.js"
     },
     {
       "src": "/(.*)",

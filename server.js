@@ -40,12 +40,8 @@ app.get('/', (req, res) => {
 
 // Handle SPA routing - serve index.html for other routes
 app.get('*', (req, res) => {
-    // Don't serve index.html for API calls or static assets
-    if (req.path.startsWith('/api/') || 
-        req.path.includes('.') || 
-        req.path.startsWith('/js/') || 
-        req.path.startsWith('/styles/') ||
-        req.path.startsWith('/examples/')) {
+    // Don't serve index.html for API calls
+    if (req.path.startsWith('/api/')) {
         return res.status(404).send('Not found');
     }
     
