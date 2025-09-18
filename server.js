@@ -19,32 +19,43 @@ const PORT = process.env.PORT || 3000;
 // Enable CORS for all routes
 app.use(cors());
 
-// Serve static files with proper MIME types FIRST
-app.use(express.static('.', {
+// Serve static files with proper MIME types
+app.use('/js', express.static(path.join(__dirname, 'js'), {
     setHeaders: (res, path) => {
-        // Set proper MIME type for JavaScript modules
-        if (path.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        }
-        // Set proper MIME type for CSS files
-        if (path.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css');
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        }
-        // Set proper MIME type for audio files
+        res.setHeader('Content-Type', 'application/javascript');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+}));
+
+app.use('/styles', express.static(path.join(__dirname, 'styles'), {
+    setHeaders: (res, path) => {
+        res.setHeader('Content-Type', 'text/css');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+}));
+
+app.use('/examples', express.static(path.join(__dirname, 'examples'), {
+    setHeaders: (res, path) => {
         if (path.endsWith('.wav')) {
             res.setHeader('Content-Type', 'audio/wav');
-            res.setHeader('Access-Control-Allow-Origin', '*');
         }
-        if (path.endsWith('.mp3')) {
-            res.setHeader('Content-Type', 'audio/mpeg');
-            res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+}));
+
+// Serve other static files
+app.use(express.static('.', {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
         }
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+        if (path.endsWith('.wav')) {
+            res.setHeader('Content-Type', 'audio/wav');
+        }
+        res.setHeader('Access-Control-Allow-Origin', '*');
     }
 }));
 
