@@ -99,14 +99,6 @@ export function extractVideoId(url) {
     return null;
 }
 
-/**
- * Validates if a string is a valid YouTube video ID
- * @param {string} videoId - Video ID to validate
- * @returns {boolean} - True if valid, false otherwise
- */
-export function isValidVideoId(videoId) {
-    return /^[a-zA-Z0-9_-]{11}$/.test(videoId);
-}
 
 /* ==========================================================================
    Time Formatting
@@ -127,51 +119,7 @@ export function formatTime(seconds) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-/**
- * Formats seconds into HH:MM:SS format for longer durations
- * @param {number} seconds - Time in seconds
- * @returns {string} - Formatted time string
- */
-export function formatTimeExtended(seconds) {
-    if (typeof seconds !== 'number' || isNaN(seconds) || seconds < 0) {
-        return '0:00:00';
-    }
-    
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-    
-    if (hours > 0) {
-        return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    } else {
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-}
 
-/**
- * Parses time string (MM:SS or HH:MM:SS) into seconds
- * @param {string} timeString - Time string to parse
- * @returns {number} - Time in seconds
- */
-export function parseTimeString(timeString) {
-    if (!timeString || typeof timeString !== 'string') {
-        return 0;
-    }
-    
-    const parts = timeString.split(':').map(part => parseInt(part, 10));
-    
-    if (parts.length === 2) {
-        // MM:SS format
-        const [mins, secs] = parts;
-        return (mins * 60) + secs;
-    } else if (parts.length === 3) {
-        // HH:MM:SS format
-        const [hours, mins, secs] = parts;
-        return (hours * 3600) + (mins * 60) + secs;
-    }
-    
-    return 0;
-}
 
 /* ==========================================================================
    DOM Utilities
@@ -186,15 +134,6 @@ export function getElementById(id) {
     return document.getElementById(id);
 }
 
-/**
- * Safely gets DOM elements by selector
- * @param {string} selector - CSS selector
- * @param {HTMLElement} context - Context element (default: document)
- * @returns {NodeList} - NodeList of elements
- */
-export function querySelectorAll(selector, context = document) {
-    return context.querySelectorAll(selector);
-}
 
 /**
  * Safely gets first DOM element by selector
@@ -243,32 +182,6 @@ export function createElement(tagName, attributes = {}, content = '') {
    Event Utilities
    ========================================================================== */
 
-/**
- * Adds event listener with optional delegation
- * @param {HTMLElement|string} target - Target element or selector
- * @param {string} event - Event type
- * @param {Function} handler - Event handler
- * @param {Object} options - Event options
- */
-export function addEventListener(target, event, handler, options = {}) {
-    const element = typeof target === 'string' ? querySelector(target) : target;
-    if (element) {
-        element.addEventListener(event, handler, options);
-    }
-}
-
-/**
- * Removes event listener
- * @param {HTMLElement|string} target - Target element or selector
- * @param {string} event - Event type
- * @param {Function} handler - Event handler
- */
-export function removeEventListener(target, event, handler) {
-    const element = typeof target === 'string' ? querySelector(target) : target;
-    if (element) {
-        element.removeEventListener(event, handler);
-    }
-}
 
 /**
  * Prevents default behavior and stops propagation
@@ -362,42 +275,11 @@ export function getStorageItem(key, defaultValue = null) {
     }
 }
 
-/**
- * Removes item from localStorage
- * @param {string} key - Storage key
- * @returns {boolean} - Success status
- */
-export function removeStorageItem(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (error) {
-        console.warn('Failed to remove from localStorage:', error);
-        return false;
-    }
-}
 
 /* ==========================================================================
    Utility Functions
    ========================================================================== */
 
-/**
- * Debounces a function call
- * @param {Function} func - Function to debounce
- * @param {number} wait - Wait time in milliseconds
- * @returns {Function} - Debounced function
- */
-export function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
 
 /**
  * Throttles a function call
@@ -424,16 +306,6 @@ export function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-/**
- * Clamps a number between min and max values
- * @param {number} value - Value to clamp
- * @param {number} min - Minimum value
- * @param {number} max - Maximum value
- * @returns {number} - Clamped value
- */
-export function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-}
 
 /**
  * Checks if code is running in development mode

@@ -149,103 +149,19 @@ body {
 /* Playlist actions are now handled by Bootstrap utility classes */
 
 /* ==========================================================================
-   Modal Styles
+   Modal Styles - Bootstrap Enhanced
    ========================================================================== */
 
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.modal.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-}
-
+/* Custom modal enhancements */
 .modal-content {
-    position: relative;
-    background: white;
     border-radius: 15px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow: hidden;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-}
-
-.modal.show .modal-content {
-    transform: scale(1);
 }
 
 .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 30px;
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
-}
-
-.modal-header h2 {
-    margin: 0;
-    font-size: 1.5em;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease;
-}
-
-.modal-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.modal-body {
-    padding: 30px;
-    max-height: calc(90vh - 140px);
-    overflow-y: auto;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 20px 30px;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
+    border-radius: 15px 15px 0 0;
 }
 
 /* ==========================================================================
@@ -316,34 +232,10 @@ body {
 }
 
 /* ==========================================================================
-   Enhanced Form Styles
+   Enhanced Form Styles - Bootstrap Enhanced
    ========================================================================== */
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #495057;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #e9ecef;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
+/* Custom form enhancements */
 .form-group input:invalid {
     border-color: #dc3545;
 }
@@ -451,21 +343,52 @@ body {
    Utility Classes
    ========================================================================== */
 
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
+/* Bootstrap provides sr-only class, so we don't need to redefine it */
 
 .loading {
     opacity: 0.6;
     pointer-events: none;
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.notification-error {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+}
+
+.notification-info {
+    background: linear-gradient(135deg, #17a2b8, #6f42c1);
+}
+
+/* Empty playlist message */
+.empty-playlist {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+    margin: 0;
 }
 
 /* ==========================================================================

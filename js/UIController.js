@@ -7,7 +7,6 @@ import {
     getElementById,
     querySelector,
     createElement,
-    addEventListener,
     preventDefault,
     formatTime,
     extractVideoId,
