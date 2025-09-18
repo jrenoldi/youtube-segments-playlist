@@ -21,15 +21,22 @@ app.use(express.static('.', {
         // Set proper MIME type for JavaScript modules
         if (path.endsWith('.js')) {
             res.setHeader('Content-Type', 'application/javascript');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         }
         // Set proper MIME type for CSS files
         if (path.endsWith('.css')) {
             res.setHeader('Content-Type', 'text/css');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         }
-        // Enable CORS headers
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        // Set proper MIME type for audio files
+        if (path.endsWith('.wav') || path.endsWith('.mp3')) {
+            res.setHeader('Content-Type', 'audio/wav');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+        }
     }
 }));
 
@@ -37,6 +44,57 @@ app.use(express.static('.', {
 app.get('/js/app.js', (req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
     res.sendFile(path.join(__dirname, 'js/app.js'));
+});
+
+app.get('/js/utils.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/utils.js'));
+});
+
+app.get('/js/adapters/UIAdapter.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/adapters/UIAdapter.js'));
+});
+
+app.get('/js/engine/YouTubeSegmentsEngine.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/engine/YouTubeSegmentsEngine.js'));
+});
+
+app.get('/js/UIController.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/UIController.js'));
+});
+
+app.get('/js/PlayerManager.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/PlayerManager.js'));
+});
+
+app.get('/js/PlaylistManager.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/PlaylistManager.js'));
+});
+
+app.get('/js/AudioManager.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/AudioManager.js'));
+});
+
+app.get('/js/VideoSegmentModal.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/VideoSegmentModal.js'));
+});
+
+app.get('/js/TransitionScreen.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/TransitionScreen.js'));
+});
+
+// Catch-all for any other JavaScript files
+app.get('/js/*.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, req.path));
 });
 
 // Handle root route - serve Karaokenator as default
