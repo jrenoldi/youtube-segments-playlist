@@ -15,12 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Enable CORS for all routes
 app.use(cors());
 
-// Handle root route - serve Karaokenator as default
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'examples/karaokenator.html'));
-});
-
-// Serve static files with proper MIME types
+// Serve static files with proper MIME types FIRST
 app.use(express.static('.', {
     setHeaders: (res, path) => {
         // Set proper MIME type for JavaScript modules
@@ -37,6 +32,17 @@ app.use(express.static('.', {
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     }
 }));
+
+// Handle specific JavaScript module requests
+app.get('/js/app.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'js/app.js'));
+});
+
+// Handle root route - serve Karaokenator as default
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'examples/karaokenator.html'));
+});
 
 // Handle SPA routing - serve index.html for other routes
 app.get('*', (req, res) => {
