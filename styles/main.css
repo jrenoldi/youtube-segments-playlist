@@ -11,6 +11,8 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 /* Custom Bootstrap gradient background for header */
@@ -40,10 +42,29 @@ body {
     box-shadow: 0 15px 40px rgba(0,0,0,0.15);
 }
 
+/* Container and layout styling */
+.container-fluid {
+    min-height: 100vh;
+    padding: 0;
+}
+
+.container {
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+}
+
+.col-lg-8, .col-lg-4 {
+    padding: 0 15px;
+}
+
 /* Custom header styling */
 .header {
     border-radius: 15px;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 
 /* Enhanced button styling */
@@ -253,10 +274,28 @@ body {
    Playlist - Bootstrap Enhanced
    ========================================================================== */
 
+/* Playlist card specific styling */
+.playlist-card {
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+}
+
+.playlist-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 .playlist {
-    max-height: 500px;
+    flex: 1;
     overflow-y: auto;
     padding-right: 5px;
+    min-height: 200px;
+    max-height: calc(100vh - 300px);
 }
 
 .playlist::-webkit-scrollbar {
@@ -389,6 +428,10 @@ body {
     font-style: italic;
     padding: 20px;
     margin: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ==========================================================================
@@ -396,7 +439,7 @@ body {
    ========================================================================== */
 
 @media (max-width: 768px) {
-    body {
+    .container-fluid {
         padding: 10px;
     }
     
@@ -418,6 +461,20 @@ body {
     
     .btn {
         font-size: 14px;
+    }
+    
+    .col-lg-8, .col-lg-4 {
+        padding: 0 5px;
+    }
+    
+    /* Playlist responsive adjustments */
+    .playlist-card {
+        position: static;
+        max-height: none;
+    }
+    
+    .playlist {
+        max-height: 400px;
     }
     
     /* Modal responsive styles */
@@ -462,6 +519,10 @@ body {
     .btn {
         font-size: 13px;
         padding: 8px 16px;
+    }
+    
+    .playlist {
+        max-height: 300px;
     }
     
     .playlist-item {
