@@ -48,77 +48,6 @@ app.use(express.static('.', {
     }
 }));
 
-// Handle specific JavaScript module requests
-app.get('/js/app.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/app.js'));
-});
-
-app.get('/js/utils.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/utils.js'));
-});
-
-app.get('/js/adapters/UIAdapter.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/adapters/UIAdapter.js'));
-});
-
-app.get('/js/engine/YouTubeSegmentsEngine.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/engine/YouTubeSegmentsEngine.js'));
-});
-
-app.get('/js/UIController.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/UIController.js'));
-});
-
-app.get('/js/PlayerManager.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/PlayerManager.js'));
-});
-
-app.get('/js/PlaylistManager.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/PlaylistManager.js'));
-});
-
-app.get('/js/AudioManager.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/AudioManager.js'));
-});
-
-app.get('/js/VideoSegmentModal.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/VideoSegmentModal.js'));
-});
-
-app.get('/js/TransitionScreen.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'js/TransitionScreen.js'));
-});
-
-// Catch-all for any other JavaScript files
-app.get('/js/*.js', (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, req.path));
-});
-
-// Handle CSS files
-app.get('/styles/*.css', (req, res) => {
-    res.setHeader('Content-Type', 'text/css');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.sendFile(path.join(__dirname, req.path));
-});
-
-// Handle audio files
-app.get('/examples/assets/*.wav', (req, res) => {
-    res.setHeader('Content-Type', 'audio/wav');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-    res.sendFile(path.join(__dirname, req.path));
-});
 
 // Handle root route - serve Karaokenator as default
 app.get('/', (req, res) => {
@@ -127,8 +56,12 @@ app.get('/', (req, res) => {
 
 // Handle SPA routing - serve index.html for other routes
 app.get('*', (req, res) => {
-    // Don't serve index.html for API calls
-    if (req.path.startsWith('/api/')) {
+    // Don't serve index.html for API calls or static assets
+    if (req.path.startsWith('/api/') || 
+        req.path.includes('.') || 
+        req.path.startsWith('/js/') || 
+        req.path.startsWith('/styles/') ||
+        req.path.startsWith('/examples/')) {
         return res.status(404).send('Not found');
     }
     
