@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple UI Example - YouTube Segments Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        
+        button:hover { opacity: 0.8; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .status {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .playlist {
+            margin: 20px 0;
+        }
+        
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        
+        .playlist-item.current {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .video-info {
+            flex: 1;
+        }
+        
+        .video-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .video-time {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-row input {
+            flex: 1;
+        }
+        
+        .messages {
+            margin: 20px 0;
+        }
+        
+        .message {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        
+        .message.success { background-color: #d4edda; color: #155724; }
+        .message.error { background-color: #f8d7da; color: #721c24; }
+        .message.info { background-color: #d1ecf1; color: #0c5460; }
+        
+        #player {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple UI Example - YouTube Segments Engine</h1>
+        
+        <!-- YouTube Player -->
+        <div id="player"></div>
+        
+        <!-- Status Display -->
+        <div class="status" id="status">
+            <strong>Status:</strong> <span id="status-text">Initializing...</span>
+        </div>
+        
+        <!-- Control Buttons -->
+        <div class="controls">
+            <button id="play-btn" class="btn-primary" disabled>Play</button>
+            <button id="pause-btn" class="btn-secondary" disabled>Pause</button>
+            <button id="stop-btn" class="btn-secondary" disabled>Stop</button>
+            <button id="prev-btn" class="btn-secondary" disabled>Previous</button>
+            <button id="next-btn" class="btn-secondary" disabled>Next</button>
+            <button id="loop-btn" class="btn-secondary" disabled>Loop: OFF</button>
+        </div>
+        
+        <!-- Add Video Form -->
+        <div class="form-group">
+            <label for="video-url">YouTube URL or Video ID:</label>
+            <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="start-time">Start Time (seconds):</label>
+                <input type="number" id="start-time" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label for="end-time">End Time (seconds):</label>
+                <input type="number" id="end-time" placeholder="Leave empty for full video">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="video-title">Title (optional):</label>
+            <input type="text" id="video-title" placeholder="Custom title for this segment">
+        </div>
+        
+        <div class="controls">
+            <button id="add-video-btn" class="btn-success">Add Video</button>
+            <button id="clear-playlist-btn" class="btn-danger">Clear Playlist</button>
+            <button id="export-btn" class="btn-secondary">Export Playlist</button>
+            <button id="import-btn" class="btn-secondary">Import Playlist</button>
+        </div>
+        
+        <!-- File Input for Import -->
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+        
+        <!-- Playlist Display -->
+        <div class="playlist" id="playlist">
+            <h3>Playlist (0 videos)</h3>
+            <div id="playlist-items">No videos in playlist</div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="messages" id="messages"></div>
+    </div>
+
+    <!-- YouTube API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <!-- Engine -->
+    <script type="module">
+        import { YouTubeSegmentsEngine } from '../js/engine/YouTubeSegmentsEngine.js';
+        
+        class SimpleUI {
+            constructor() {
+                this.engine = null;
+                this.isInitialized = false;
+                
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    console.log('Initializing Simple UI...');
+                    
+                    // Initialize engine
+                    this.engine = new YouTubeSegmentsEngine({
+                        playerId: 'player',
+                        autoAdvance: true,
+                        enableStorage: true
+                    });
+                    
+                    // Wait for engine to be ready
+                    this.engine.on('engine:ready', () => {
+                        this.isInitialized = true;
+                        this.updateStatus('Ready');
+                        this.updateControls();
+                        console.log('Simple UI initialized successfully');
+                    });
+                    
+                    // Connect engine events to UI updates
+                    this.connectEngineEvents();
+                    
+                    // Connect UI events to engine actions
+                    this.connectUIEvents();
+                    
+                } catch (error) {
+                    console.error('Failed to initialize Simple UI:', error);
+                    this.showMessage('Failed to initialize: ' + error.message, 'error');
+                }
+            }
+            
+            connectEngineEvents() {
+                // Player events
+                this.engine.on('player:ready', () => {
+                    this.updateStatus('Player ready');
+                    this.updateControls();
+                });
+                
+                this.engine.on('player:stateChanged', (data) => {
+                    this.updateControls();
+                });
+                
+                this.engine.on('player:error', (data) => {
+                    this.showMessage('Player error: ' + data.error, 'error');
+                });
+                
+                // Playlist events
+                this.engine.on('playlist:changed', (data) => {
+                    this.updatePlaylist(data.playlist, data.currentIndex);
+                });
+                
+                this.engine.on('playlist:currentChanged', (data) => {
+                    this.updatePlaylist(this.engine.getPlaylist(), data.index);
+                });
+                
+                this.engine.on('playlist:videoAdded', (data) => {
+                    this.showMessage(data.message, 'success');
+                });
+                
+                this.engine.on('playlist:videoRemoved', (data) => {
+                    this.showMessage(data.message, 'success');
+                });
+                
+                this.engine.on('playlist:loopToggled', (data) => {
+                    this.updateControls();
+                });
+                
+                this.engine.on('playlist:error', (data) => {
+                    this.showMessage(data.error, 'error');
+                });
+                
+                this.engine.on('playlist:ended', () => {
+                    this.showMessage('Playlist finished', 'info');
+                });
+                
+                // Engine events
+                this.engine.on('engine:error', (data) => {
+                    this.showMessage('Engine error: ' + data.error, 'error');
+                });
+            }
+            
+            connectUIEvents() {
+                // Control buttons
+                document.getElementById('play-btn').addEventListener('click', () => {
+                    this.engine.play();
+                });
+                
+                document.getElementById('pause-btn').addEventListener('click', () => {
+                    this.engine.pause();
+                });
+                
+                document.getElementById('stop-btn').addEventListener('click', () => {
+                    this.engine.stop();
+                });
+                
+                document.getElementById('prev-btn').addEventListener('click', () => {
+                    this.engine.previous();
+                });
+                
+                document.getElementById('next-btn').addEventListener('click', () => {
+                    this.engine.next();
+                });
+                
+                document.getElementById('loop-btn').addEventListener('click', () => {
+                    const loopEnabled = this.engine.toggleLoop();
+                    this.showMessage(loopEnabled ? 'Loop enabled' : 'Loop disabled', 'info');
+                });
+                
+                // Add video
+                document.getElementById('add-video-btn').addEventListener('click', () => {
+                    this.addVideo();
+                });
+                
+                // Clear playlist
+                document.getElementById('clear-playlist-btn').addEventListener('click', () => {
+                    this.engine.clearPlaylist();
+                    this.showMessage('Playlist cleared', 'info');
+                });
+                
+                // Export playlist
+                document.getElementById('export-btn').addEventListener('click', () => {
+                    this.exportPlaylist();
+                });
+                
+                // Import playlist
+                document.getElementById('import-btn').addEventListener('click', () => {
+                    document.getElementById('import-file').click();
+                });
+                
+                document.getElementById('import-file').addEventListener('change', (e) => {
+                    this.importPlaylist(e.target.files[0]);
+                });
+            }
+            
+            addVideo() {
+                const url = document.getElementById('video-url').value.trim();
+                const startTime = parseInt(document.getElementById('start-time').value) || 0;
+                const endTime = document.getElementById('end-time').value ? parseInt(document.getElementById('end-time').value) : null;
+                const title = document.getElementById('video-title').value.trim();
+                
+                if (!url) {
+                    this.showMessage('Please enter a YouTube URL or video ID', 'error');
+                    return;
+                }
+                
+                const result = this.engine.addVideo({
+                    url,
+                    startTime,
+                    endTime,
+                    title
+                });
+                
+                if (result.success) {
+                    // Clear form
+                    document.getElementById('video-url').value = '';
+                    document.getElementById('start-time').value = '0';
+                    document.getElementById('end-time').value = '';
+                    document.getElementById('video-title').value = '';
+                }
+            }
+            
+            exportPlaylist() {
+                if (this.engine.isPlaylistEmpty()) {
+                    this.showMessage('Cannot export empty playlist', 'error');
+                    return;
+                }
+                
+                try {
+                    const playlistData = JSON.parse(this.engine.exportPlaylist());
+                    const dataStr = JSON.stringify(playlistData, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'playlist.json';
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showMessage('Playlist exported successfully', 'success');
+                } catch (error) {
+                    this.showMessage('Failed to export playlist: ' + error.message, 'error');
+                }
+            }
+            
+            importPlaylist(file) {
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const result = this.engine.importPlaylist(e.target.result);
+                        if (result.success) {
+                            this.showMessage(result.message, 'success');
+                        }
+                    } catch (error) {
+                        this.showMessage('Failed to import playlist: ' + error.message, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+            
+            updateStatus(text) {
+                document.getElementById('status-text').textContent = text;
+            }
+            
+            updateControls() {
+                const status = this.engine.getStatus();
+                
+                document.getElementById('play-btn').disabled = !status.playerReady || status.isPlaying;
+                document.getElementById('pause-btn').disabled = !status.playerReady || !status.isPlaying;
+                document.getElementById('stop-btn').disabled = !status.playerReady;
+                document.getElementById('prev-btn').disabled = !status.hasPrevious;
+                document.getElementById('next-btn').disabled = !status.hasNext;
+                document.getElementById('loop-btn').disabled = !status.playerReady;
+                
+                document.getElementById('loop-btn').textContent = `Loop: ${status.loopEnabled ? 'ON' : 'OFF'}`;
+            }
+            
+            updatePlaylist(playlist, currentIndex = -1) {
+                const playlistItems = document.getElementById('playlist-items');
+                const playlistTitle = document.querySelector('#playlist h3');
+                
+                playlistTitle.textContent = `Playlist (${playlist.length} videos)`;
+                
+                if (playlist.length === 0) {
+                    playlistItems.innerHTML = 'No videos in playlist';
+                    return;
+                }
+                
+                playlistItems.innerHTML = playlist.map((video, index) => {
+                    const endTimeText = video.endTime ? `${video.endTime}s` : 'End';
+                    const isCurrent = index === currentIndex;
+                    
+                    return `
+                        <div class="playlist-item ${isCurrent ? 'current' : ''}" data-index="${index}">
+                            <div class="video-info">
+                                <div class="video-title">${this.escapeHtml(video.title)}</div>
+                                <div class="video-time">${video.startTime}s - ${endTimeText}</div>
+                            </div>
+                            <button class="btn-danger" onclick="simpleUI.removeVideo(${index})">Remove</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            removeVideo(index) {
+                this.engine.removeVideo(index);
+            }
+            
+            showMessage(text, type = 'info') {
+                const messagesContainer = document.getElementById('messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}`;
+                messageDiv.textContent = text;
+                
+                messagesContainer.appendChild(messageDiv);
+                
+                // Remove message after 5 seconds
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.parentNode.removeChild(messageDiv);
+                    }
+                }, 5000);
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+        
+        // Initialize the simple UI
+        const simpleUI = new SimpleUI();
+        
+        // Make it globally available for onclick handlers
+        window.simpleUI = simpleUI;
+    </script>
+</body>
+</html>
