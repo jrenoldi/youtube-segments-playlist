@@ -37,8 +37,12 @@ app.use(express.static('.', {
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         }
         // Set proper MIME type for audio files
-        if (path.endsWith('.wav') || path.endsWith('.mp3')) {
+        if (path.endsWith('.wav')) {
             res.setHeader('Content-Type', 'audio/wav');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+        }
+        if (path.endsWith('.mp3')) {
+            res.setHeader('Content-Type', 'audio/mpeg');
             res.setHeader('Access-Control-Allow-Origin', '*');
         }
     }
@@ -98,6 +102,21 @@ app.get('/js/TransitionScreen.js', (req, res) => {
 // Catch-all for any other JavaScript files
 app.get('/js/*.js', (req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, req.path));
+});
+
+// Handle CSS files
+app.get('/styles/*.css', (req, res) => {
+    res.setHeader('Content-Type', 'text/css');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.sendFile(path.join(__dirname, req.path));
+});
+
+// Handle audio files
+app.get('/examples/assets/*.wav', (req, res) => {
+    res.setHeader('Content-Type', 'audio/wav');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
     res.sendFile(path.join(__dirname, req.path));
 });
 
