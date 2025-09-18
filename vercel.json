@@ -12,6 +12,10 @@
       "dest": "/server.js"
     },
     {
+      "src": "/",
+      "dest": "/examples/karaokenator.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/server.js"
     }

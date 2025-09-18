@@ -33,13 +33,19 @@ app.use(express.static('.', {
     }
 }));
 
-// Handle SPA routing - serve index.html for all routes
+// Handle root route - serve Karaokenator as default
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'examples/karaokenator.html'));
+});
+
+// Handle SPA routing - serve index.html for other routes
 app.get('*', (req, res) => {
     // Don't serve index.html for API calls or static assets
     if (req.path.startsWith('/api/') || 
         req.path.includes('.') || 
         req.path.startsWith('/js/') || 
-        req.path.startsWith('/styles/')) {
+        req.path.startsWith('/styles/') ||
+        req.path.startsWith('/examples/')) {
         return res.status(404).send('Not found');
     }
     

@@ -64,14 +64,15 @@ vercel
 ## 🎯 Access Your Deployed App
 
 After deployment, you'll get a URL like:
-- **Main App**: `https://your-project-name.vercel.app`
-- **Karaokenator**: `https://your-project-name.vercel.app/examples/karaokenator.html`
+- **Karaokenator (Landing Page)**: `https://your-project-name.vercel.app`
+- **Original App**: `https://your-project-name.vercel.app/index.html`
 
 ## 🎤 Karaokenator Specific URLs
 
 Once deployed, access these specific features:
 
-- **Karaokenator**: `/examples/karaokenator.html`
+- **Karaokenator (Landing Page)**: `/` (root URL)
+- **Original App**: `/index.html`
 - **Simple UI**: `/examples/simple-ui-example.html`
 - **Programmatic Example**: `/examples/programmatic-example.js`
 
