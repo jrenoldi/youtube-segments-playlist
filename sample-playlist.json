@@ -1,0 +1,46 @@
+{
+  "playlist": [
+    {
+      "url": "enX0rOc5RR0",
+      "startTime": 100,
+      "endTime": 130,
+      "title": "Prófugos - Soda Stereo",
+      "id": "mfo637abwdr54al5bqe",
+      "videoId": "enX0rOc5RR0",
+      "dateAdded": "2025-09-17T15:59:20.483Z"
+    },
+    {
+      "url": "O7xFdFjW0nQ",
+      "startTime": 60,
+      "endTime": 90,
+      "title": "In the End - Linkin Park",
+      "id": "mfo637abxhktvteutnc",
+      "videoId": "O7xFdFjW0nQ",
+      "dateAdded": "2025-09-17T15:59:20.483Z"
+    },
+    {
+      "id": "mfo6cwlmdqy9yh8frwo",
+      "url": "O4xewb7BZZw",
+      "videoId": "O4xewb7BZZw",
+      "startTime": 74,
+      "endTime": 90,
+      "title": "SOAD",
+      "dateAdded": "2025-09-17T16:06:53.194Z"
+    },
+    {
+      "id": "mfo74agmotnh7hbf9df",
+      "url": "AaJ_9FdzBwU",
+      "videoId": "AaJ_9FdzBwU",
+      "startTime": 76,
+      "endTime": 95,
+      "title": "I feel loved - Depeche Mode",
+      "dateAdded": "2025-09-17T16:28:10.870Z"
+    }
+  ],
+  "loopEnabled": true,
+  "exportedAt": "2025-09-17T16:42:20.449Z",
+  "version": "1.0",
+  "name": "Karaoke playlist Test",
+  "createdAt": "2025-09-17T16:42:20.449Z",
+  "totalVideos": 4
+}

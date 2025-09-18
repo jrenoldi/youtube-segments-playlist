@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Segments Playlist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .player-section {
+            flex: 2;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .playlist-section {
+            flex: 1;
+            padding: 30px;
+            background: white;
+            border-left: 1px solid #e9ecef;
+        }
+
+        .player-container {
+            background: black;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        #player {
+            width: 100%;
+            height: 400px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .status h3 {
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+
+        .playlist {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .playlist-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .playlist-item:hover {
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .playlist-item.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .playlist-item h4 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .playlist-item .time-info {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .add-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-inputs .form-group {
+            flex: 1;
+        }
+
+        .current-video-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .playlist-section {
+                border-left: none;
+                border-top: 1px solid #e9ecef;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            #player {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 YouTube Video Segments Playlist</h1>
+            <p>Create custom playlists with specific start and end times for each video</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="player-section">
+                <div class="player-container">
+                    <div id="player"></div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="playPrevious()">⏮ Previous</button>
+                    <button class="btn btn-success" onclick="togglePlayPause()">⏯ Play/Pause</button>
+                    <button class="btn btn-primary" onclick="playNext()">⏭ Next</button>
+                    <button class="btn btn-secondary" onclick="toggleLoop()">🔁 Loop: <span id="loop-status">OFF</span></button>
+                </div>
+                
+                <div class="status">
+                    <h3>Current Segment</h3>
+                    <div id="current-info">No video loaded</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="add-form">
+                    <h3>Add New Video Segment</h3>
+                    <div class="form-group">
+                        <label for="video-url">YouTube URL or Video ID:</label>
+                        <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=VIDEO_ID or just VIDEO_ID">
+                    </div>
+                    <div class="time-inputs">
+                        <div class="form-group">
+                            <label for="start-time">Start Time (seconds):</label>
+                            <input type="number" id="start-time" placeholder="0" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="end-time">End Time (seconds):</label>
+                            <input type="number" id="end-time" placeholder="Leave empty for full video">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="video-title">Title (optional):</label>
+                        <input type="text" id="video-title" placeholder="Custom title for this segment">
+                    </div>
+                    <button class="btn btn-success" onclick="addVideo()">➕ Add to Playlist</button>
+                </div>
+            </div>
+            
+            <div class="playlist-section">
+                <h2>📋 Playlist</h2>
+                <div id="playlist" class="playlist">
+                    <!-- Playlist items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let player;
+        let playlist = [];
+        let currentIndex = 0;
+        let loopEnabled = false;
+        let progressInterval;
+
+        // Load YouTube IFrame API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Initialize player when API is ready
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '400',
+                width: '100%',
+                playerVars: {
+                    'playsinline': 1,
+                    'rel': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log('Player ready');
+            // Load some default videos if playlist is empty
+            if (playlist.length === 0) {
+                loadDefaultPlaylist();
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                handleVideoEnd();
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                startProgressTracking();
+            } else {
+                stopProgressTracking();
+            }
+        }
+
+        function onPlayerError(event) {
+            console.error('Player error:', event.data);
+            alert('Error playing video. Skipping to next video.');
+            playNext();
+        }
+
+        function handleVideoEnd() {
+            if (loopEnabled && currentIndex === playlist.length - 1) {
+                currentIndex = 0;
+                playCurrentVideo();
+            } else if (currentIndex < playlist.length - 1) {
+                currentIndex++;
+                playCurrentVideo();
+            }
+        }
+
+        function playCurrentVideo() {
+            if (playlist.length === 0) return;
+            
+            const currentVideo = playlist[currentIndex];
+            const videoId = extractVideoId(currentVideo.url);
+            
+            if (videoId) {
+                player.loadVideoById({
+                    videoId: videoId,
+                    startSeconds: currentVideo.startTime,
+                    endSeconds: currentVideo.endTime || undefined
+                });
+                
+                updateCurrentInfo();
+                updatePlaylistDisplay();
+            } else {
+                alert('Invalid video ID');
+            }
+        }
+
+        function playNext() {
+            if (currentIndex < playlist.length - 1) {
+                currentIndex++;
+                playCurrentVideo();
+            } else if (loopEnabled) {
+                currentIndex = 0;
+                playCurrentVideo();
+            }
+        }
+
+        function playPrevious() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                playCurrentVideo();
+            } else if (loopEnabled && playlist.length > 0) {
+                currentIndex = playlist.length - 1;
+                playCurrentVideo();
+            }
+        }
+
+        function togglePlayPause() {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+
+        function toggleLoop() {
+            loopEnabled = !loopEnabled;
+            document.getElementById('loop-status').textContent = loopEnabled ? 'ON' : 'OFF';
+        }
+
+        function addVideo() {
+            const url = document.getElementById('video-url').value.trim();
+            const startTime = parseInt(document.getElementById('start-time').value) || 0;
+            const endTime = parseInt(document.getElementById('end-time').value) || null;
+            const title = document.getElementById('video-title').value.trim();
+            
+            if (!url) {
+                alert('Please enter a YouTube URL or Video ID');
+                return;
+            }
+            
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                alert('Invalid YouTube URL or Video ID');
+                return;
+            }
+            
+            const videoData = {
+                url: url,
+                startTime: startTime,
+                endTime: endTime,
+                title: title || `Video ${playlist.length + 1}`,
+                id: Date.now()
+            };
+            
+            playlist.push(videoData);
+            updatePlaylistDisplay();
+            
+            // Clear form
+            document.getElementById('video-url').value = '';
+            document.getElementById('start-time').value = '0';
+            document.getElementById('end-time').value = '';
+            document.getElementById('video-title').value = '';
+            
+            // If this is the first video, play it
+            if (playlist.length === 1) {
+                currentIndex = 0;
+                playCurrentVideo();
+            }
+        }
+
+        function extractVideoId(url) {
+            // Handle different YouTube URL formats
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : (url.length === 11 ? url : null);
+        }
+
+        function updatePlaylistDisplay() {
+            const playlistElement = document.getElementById('playlist');
+            playlistElement.innerHTML = '';
+            
+            playlist.forEach((video, index) => {
+                const item = document.createElement('div');
+                item.className = `playlist-item ${index === currentIndex ? 'active' : ''}`;
+                item.onclick = () => {
+                    currentIndex = index;
+                    playCurrentVideo();
+                };
+                
+                const endTimeText = video.endTime ? ` - ${formatTime(video.endTime)}` : ' - End';
+                
+                item.innerHTML = `
+                    <h4>${video.title}</h4>
+                    <div class="time-info">${formatTime(video.startTime)}${endTimeText}</div>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); removeVideo(${index})" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;">Remove</button>
+                `;
+                
+                playlistElement.appendChild(item);
+            });
+        }
+
+        function removeVideo(index) {
+            playlist.splice(index, 1);
+            if (currentIndex >= playlist.length && playlist.length > 0) {
+                currentIndex = playlist.length - 1;
+                playCurrentVideo();
+            } else if (playlist.length === 0) {
+                currentIndex = 0;
+                player.stopVideo();
+                updateCurrentInfo();
+            }
+            updatePlaylistDisplay();
+        }
+
+        function updateCurrentInfo() {
+            const infoElement = document.getElementById('current-info');
+            if (playlist.length === 0) {
+                infoElement.innerHTML = 'No video loaded';
+                return;
+            }
+            
+            const currentVideo = playlist[currentIndex];
+            const endTimeText = currentVideo.endTime ? formatTime(currentVideo.endTime) : 'End';
+            
+            infoElement.innerHTML = `
+                <strong>${currentVideo.title}</strong><br>
+                Segment: ${formatTime(currentVideo.startTime)} - ${endTimeText}<br>
+                Video ${currentIndex + 1} of ${playlist.length}
+            `;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function startProgressTracking() {
+            stopProgressTracking();
+            progressInterval = setInterval(updateProgress, 100);
+        }
+
+        function stopProgressTracking() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        }
+
+        function updateProgress() {
+            if (player && player.getCurrentTime && playlist.length > 0) {
+                const currentVideo = playlist[currentIndex];
+                const currentTime = player.getCurrentTime();
+                const startTime = currentVideo.startTime;
+                const endTime = currentVideo.endTime || player.getDuration();
+                
+                const duration = endTime - startTime;
+                const progress = Math.max(0, Math.min(100, ((currentTime - startTime) / duration) * 100));
+                
+                document.getElementById('progress-fill').style.width = progress + '%';
+            }
+        }
+
+        function loadDefaultPlaylist() {
+            // Add some example videos
+            const defaultVideos = [
+                {
+                    url: 'M7lc1UVf-VE',
+                    startTime: 10,
+                    endTime: 30,
+                    title: 'Sample Video 1 - First Segment'
+                },
+                {
+                    url: 'dQw4w9WgXcQ',
+                    startTime: 0,
+                    endTime: 15,
+                    title: 'Sample Video 2 - Intro'
+                }
+            ];
+            
+            playlist = defaultVideos;
+            updatePlaylistDisplay();
+            if (playlist.length > 0) {
+                currentIndex = 0;
+                playCurrentVideo();
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.target.tagName === 'INPUT') return;
+            
+            switch(event.key) {
+                case ' ':
+                    event.preventDefault();
+                    togglePlayPause();
+                    break;
+                case 'ArrowRight':
+                    playNext();
+                    break;
+                case 'ArrowLeft':
+                    playPrevious();
+                    break;
+                case 'l':
+                    toggleLoop();
+                    break;
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            stopProgressTracking();
+        });
+    </script>
+</body>
+</html>

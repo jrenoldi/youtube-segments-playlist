@@ -1,0 +1,637 @@
+/* ==========================================================================
+   YouTube Video Segments Playlist - Main Stylesheet
+   Enhanced with Bootstrap Integration
+   ========================================================================== */
+
+/* ==========================================================================
+   Base Styles & Bootstrap Enhancements
+   ========================================================================== */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* Custom Bootstrap gradient background for header */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24) !important;
+}
+
+/* Custom Bootstrap gradient for progress bar */
+.bg-gradient {
+    background: linear-gradient(90deg, #667eea, #764ba2) !important;
+}
+
+/* ==========================================================================
+   Layout Components - Bootstrap Enhanced
+   ========================================================================== */
+
+/* Enhanced card styling */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Custom header styling */
+.header {
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+/* Enhanced button styling */
+.btn {
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-width: 2px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Enhanced form controls */
+.form-control {
+    border-radius: 10px;
+    border-width: 2px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* ==========================================================================
+   Player Components - Bootstrap Enhanced
+   ========================================================================== */
+
+.player-container {
+    background: black;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+#player {
+    width: 100%;
+    height: 400px;
+    border-radius: 15px;
+}
+
+/* Enhanced alert styling */
+.alert {
+    border: none;
+    border-radius: 15px;
+    border-left: 4px solid #2196f3;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+}
+
+/* Enhanced progress bar */
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+/* ==========================================================================
+   Controls & Buttons - Bootstrap Enhanced
+   ========================================================================== */
+
+/* Additional button enhancements */
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: #667eea;
+}
+
+.btn-outline-secondary:hover {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    border-color: #f093fb;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ==========================================================================
+   Status & Progress - Bootstrap Enhanced
+   ========================================================================== */
+
+/* Status styling is now handled by Bootstrap alert classes */
+
+/* ==========================================================================
+   Playlist Actions Section - Bootstrap Enhanced
+   ========================================================================== */
+
+/* Playlist actions are now handled by Bootstrap utility classes */
+
+/* ==========================================================================
+   Modal Styles
+   ========================================================================== */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+    padding: 30px;
+    max-height: calc(90vh - 140px);
+    overflow-y: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 30px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* ==========================================================================
+   Modal Form Styles
+   ========================================================================== */
+
+.video-form .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.video-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.video-form .form-group.inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.video-form .validate-btn {
+    align-self: flex-start;
+    margin-top: 5px;
+}
+
+/* ==========================================================================
+   Video Preview Section
+   ========================================================================== */
+
+.video-preview-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    border: 2px solid #e9ecef;
+}
+
+.preview-player-container {
+    background: black;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    aspect-ratio: 16/9;
+}
+
+#preview-player {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+}
+
+.video-info {
+    text-align: center;
+}
+
+.video-info h4 {
+    margin: 0 0 5px 0;
+    color: #495057;
+}
+
+.video-info p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   Enhanced Form Styles
+   ========================================================================== */
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-group input:invalid {
+    border-color: #dc3545;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+.time-inputs .form-group {
+    flex: 1;
+}
+
+/* ==========================================================================
+   Playlist - Bootstrap Enhanced
+   ========================================================================== */
+
+.playlist {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.playlist::-webkit-scrollbar {
+    width: 8px;
+}
+
+.playlist::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.playlist::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.playlist::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.playlist-item {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.playlist-item:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.playlist-item.active {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.playlist-item h4 {
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+.playlist-item .time-info {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.playlist-item .remove-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 20px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.playlist-item.active .remove-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.playlist-item .remove-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Responsive Design - Bootstrap Enhanced
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .header {
+        margin-bottom: 1rem;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .header p {
+        font-size: 1rem;
+    }
+    
+    #player {
+        height: 250px;
+    }
+    
+    .btn {
+        font-size: 14px;
+    }
+    
+    /* Modal responsive styles */
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 15px 20px;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+    
+    #preview-player {
+        min-height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 1.5rem;
+    }
+    
+    .header h1 {
+        font-size: 1.75rem;
+    }
+    
+    #player {
+        height: 200px;
+    }
+    
+    .btn {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
+    
+    .playlist-item {
+        padding: 12px;
+    }
+    
+    .playlist-item h4 {
+        font-size: 14px;
+    }
+}
+
+/* ==========================================================================
+   Animations & Transitions
+   ========================================================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.playlist-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.loading .progress-fill {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Focus & Accessibility
+   ========================================================================== */
+
+.btn:focus-visible,
+.form-group input:focus-visible,
+.playlist-item:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+.playlist-item:focus {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .player-container,
+    .controls,
+    .add-form {
+        display: none;
+    }
+    
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .playlist-section {
+        border: none;
+        padding: 20px;
+    }
+}
