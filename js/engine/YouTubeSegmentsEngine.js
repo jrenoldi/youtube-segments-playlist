@@ -592,7 +592,7 @@ export class YouTubeSegmentsEngine {
      * @returns {boolean} - True if empty
      */
     isPlaylistEmpty() {
-        return this.playlistManager?.isEmpty() || true;
+        return this.playlistManager?.isEmpty() ?? true;
     }
 
     /**
