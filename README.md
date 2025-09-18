@@ -28,6 +28,9 @@ This project now features a **modular architecture** that separates the core fun
 
 - 🎵 Create playlists with custom start/end times for YouTube videos
 - ▶️ Play segments automatically with seamless transitions
+- 🎬 Transition screen with countdown between segments
+- 🎉 Crowd cheers audio during transitions
+- 🔊 Volume fade in/out effects for smooth audio
 - 🔄 Loop playlists
 - 💾 Save and load playlists as JSON files
 - 🏗️ Modular architecture with clean API
@@ -70,6 +73,31 @@ npm run start-with-nvm
 npm run serve
 ```
 The application will be available at `http://localhost:8080`
+
+## 🎬 New Features
+
+### Transition Screen with Countdown
+When a video segment ends, a transition screen appears showing:
+- The name of the next song
+- A countdown timer (21 seconds)
+- Crowd cheers audio playing in the background
+- Special emphasis on the last 5 seconds
+
+### Volume Fade Effects
+- **Fade In**: Videos start with volume 0 and smoothly fade in over 2 seconds
+- **Fade Out**: Videos fade out smoothly 2 seconds before ending
+- Creates a professional karaoke experience with smooth audio transitions
+
+### Configuration Options
+```javascript
+const engine = new YouTubeSegmentsEngine({
+    enableTransitionScreen: true,  // Show countdown between segments
+    enableAudioEffects: true,     // Play crowd cheers audio
+    enableVolumeFade: true,       // Smooth volume transitions
+    fadeInDuration: 2,           // Fade in duration (seconds)
+    fadeOutDuration: 2           // Fade out duration (seconds)
+});
+```
 
 ## 🚀 Using the Engine API
 

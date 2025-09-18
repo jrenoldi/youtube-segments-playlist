@@ -427,6 +427,17 @@ export class PlaylistManager {
     }
 
     /**
+     * Get next video in playlist
+     * @returns {Object|null} - Next video object
+     */
+    getNextVideo() {
+        if (this.hasNext()) {
+            return this.playlist[this.currentIndex + 1] || null;
+        }
+        return null;
+    }
+
+    /**
      * Get entire playlist
      * @returns {Array} - Playlist array
      */

@@ -28,6 +28,14 @@ export class PlayerManager {
         // Segment end tracking to prevent race conditions
         this.hasSegmentEnded = false;
         
+        // Volume fade management
+        this.fadeInDuration = options.fadeInDuration || 2; // Default 2 seconds
+        this.fadeOutDuration = options.fadeOutDuration || 2; // Default 2 seconds
+        this.targetVolume = options.targetVolume || 100; // Default volume
+        this.enableVolumeFade = options.enableVolumeFade !== false; // Default true
+        this.isFading = false;
+        this.fadeInterval = null;
+        
         // Throttled progress update
         this.throttledProgressUpdate = throttle(() => {
             this.updateProgress();
@@ -207,7 +215,22 @@ export class PlayerManager {
             }
             
             devLog('🎬 Loading video:', videoData.title);
-            this.player.loadVideoById(loadOptions);
+            
+            // Handle volume based on fade settings
+            if (this.enableVolumeFade) {
+                // Start with volume 0 for fade-in effect
+                this.player.setVolume(0);
+                this.player.loadVideoById(loadOptions);
+                
+                // Start fade-in after a short delay to ensure video is loading
+                setTimeout(() => {
+                    this.fadeIn();
+                }, 500);
+            } else {
+                // Set volume to target level immediately
+                this.player.setVolume(this.targetVolume);
+                this.player.loadVideoById(loadOptions);
+            }
             
             return true;
         } catch (error) {
@@ -279,6 +302,85 @@ export class PlayerManager {
         if (this.isReady && this.player.setVolume) {
             this.player.setVolume(Math.max(0, Math.min(100, volume)));
         }
+    }
+
+    /**
+     * Fade volume from current level to target level
+     * @param {number} targetVolume - Target volume level (0-100)
+     * @param {number} duration - Fade duration in seconds
+     * @returns {Promise} - Resolves when fade completes
+     */
+    fadeVolume(targetVolume, duration) {
+        return new Promise((resolve) => {
+            if (!this.isReady || !this.player.setVolume) {
+                resolve();
+                return;
+            }
+
+            // Stop any existing fade
+            this.stopFade();
+
+            const startVolume = this.getVolume();
+            const volumeDifference = targetVolume - startVolume;
+            const steps = Math.max(1, Math.floor(duration * 10)); // 10 updates per second
+            const volumeStep = volumeDifference / steps;
+            const stepDuration = duration * 1000 / steps; // Convert to milliseconds
+
+            this.isFading = true;
+            let currentStep = 0;
+
+            this.fadeInterval = setInterval(() => {
+                currentStep++;
+                const newVolume = startVolume + (volumeStep * currentStep);
+                const clampedVolume = Math.max(0, Math.min(100, newVolume));
+                
+                this.player.setVolume(clampedVolume);
+
+                if (currentStep >= steps) {
+                    this.stopFade();
+                    resolve();
+                }
+            }, stepDuration);
+        });
+    }
+
+    /**
+     * Fade in volume from 0 to target volume
+     * @param {number} duration - Fade duration in seconds
+     * @returns {Promise} - Resolves when fade completes
+     */
+    fadeIn(duration = this.fadeInDuration) {
+        devLog(`🎵 Fading in volume over ${duration} seconds`);
+        return this.fadeVolume(this.targetVolume, duration);
+    }
+
+    /**
+     * Fade out volume to 0
+     * @param {number} duration - Fade duration in seconds
+     * @returns {Promise} - Resolves when fade completes
+     */
+    fadeOut(duration = this.fadeOutDuration) {
+        devLog(`🎵 Fading out volume over ${duration} seconds`);
+        return this.fadeVolume(0, duration);
+    }
+
+    /**
+     * Stop any active volume fade
+     */
+    stopFade() {
+        if (this.fadeInterval) {
+            clearInterval(this.fadeInterval);
+            this.fadeInterval = null;
+        }
+        this.isFading = false;
+    }
+
+    /**
+     * Check if volume is currently fading
+     * @returns {boolean} - True if fading
+     */
+    isVolumeFading() {
+        return this.isFading;
     }
 
     /* ==========================================================================
@@ -407,7 +509,14 @@ export class PlayerManager {
         const currentTime = this.getCurrentTime();
         const endTime = this.currentVideoData.endTime;
         
-        // Progress tracking runs silently - only log when segment ends
+        // Check if we should start fade-out
+        if (this.enableVolumeFade) {
+            const fadeOutStartTime = endTime - this.fadeOutDuration;
+            if (currentTime >= fadeOutStartTime && !this.hasSegmentEnded && !this.isVolumeFading()) {
+                devLog('🎵 Starting fade-out for segment end');
+                this.fadeOut();
+            }
+        }
         
         // End segment if we've reached or passed the end time
         if (currentTime >= endTime) {
@@ -476,6 +585,7 @@ export class PlayerManager {
         devLog('Destroying PlayerManager');
         
         this.stopProgressTracking();
+        this.stopFade();
         
         if (this.player && this.player.destroy) {
             try {
@@ -489,6 +599,7 @@ export class PlayerManager {
         this.isReady = false;
         this.currentVideoData = null;
         this.hasSegmentEnded = false;
+        this.isFading = false;
         this.onReadyCallback = null;
         this.onStateChangeCallback = null;
         this.onErrorCallback = null;

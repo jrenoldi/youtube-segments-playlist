@@ -619,3 +619,110 @@ body {
         padding: 20px;
     }
 }
+
+/* ==========================================================================
+   Transition Screen Styles
+   ========================================================================== */
+
+.transition-screen {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: opacity 0.3s ease;
+}
+
+.transition-content {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.transition-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #ff6b6b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.transition-song-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.transition-countdown {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 15px;
+    color: #667eea;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.transition-countdown.emphasis {
+    color: #ff6b6b;
+    transform: scale(1.1);
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+    animation: pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+.transition-subtitle {
+    font-size: 1.2rem;
+    color: #cccccc;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Responsive adjustments for transition screen */
+@media (max-width: 768px) {
+    .transition-song-name {
+        font-size: 1.5rem;
+    }
+    
+    .transition-countdown {
+        font-size: 3rem;
+    }
+    
+    .transition-title {
+        font-size: 1.2rem;
+    }
+    
+    .transition-subtitle {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .transition-song-name {
+        font-size: 1.2rem;
+    }
+    
+    .transition-countdown {
+        font-size: 2.5rem;
+    }
+    
+    .transition-title {
+        font-size: 1rem;
+    }
+}
