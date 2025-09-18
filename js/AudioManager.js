@@ -20,7 +20,7 @@ export class AudioManager {
         
         // Audio file paths
         this.audioFiles = {
-            crowdCheers: 'assets/crowd-cheers.wav'
+            crowdCheers: 'examples/assets/crowd-cheers.wav'
         };
         
         this.init();
