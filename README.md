@@ -2,6 +2,8 @@
 
 A web application for creating custom playlists with specific start and end times for YouTube videos. Perfect for karaoke sessions, music practice, or any scenario where you need to play specific segments of videos.
 
+![YouTube Video Segments Playlist](screen.png)
+
 ## Features
 
 - 🎵 Create playlists with custom start/end times for YouTube videos
