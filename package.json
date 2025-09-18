@@ -2,6 +2,7 @@
   "name": "youtube-segments-playlist",
   "version": "1.0.0",
   "description": "A web application for creating custom playlists with specific start and end times for YouTube videos",
+  "type": "module",
   "main": "js/app.js",
   "scripts": {
     "start": "node server.js",
