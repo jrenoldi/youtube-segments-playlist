@@ -169,7 +169,7 @@ Create playlists like this:
 
 ### Crowd Cheers Not Playing
 - Check browser audio permissions
-- Ensure `examples/assets/crowd-cheers.wav` exists
+- Ensure `assets/crowd-cheers.wav` exists
 - Try refreshing the page
 
 ### Transitions Not Working
