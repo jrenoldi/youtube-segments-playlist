@@ -233,6 +233,11 @@ export function validateVideoData(videoData) {
         errors.push('Title must be a string');
     }
     
+    // Validate enableFade
+    if (videoData.enableFade !== undefined && typeof videoData.enableFade !== 'boolean') {
+        errors.push('EnableFade must be a boolean');
+    }
+    
     return {
         isValid: errors.length === 0,
         errors

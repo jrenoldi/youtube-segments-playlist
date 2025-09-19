@@ -42,6 +42,7 @@ export class PlaylistManager {
         devLog('Playlist initialized empty');
     }
 
+
     /**
      * Load default playlist
      */
@@ -69,9 +70,15 @@ export class PlaylistManager {
         const data = getStorageItem(this.storageKey);
         
         if (data && Array.isArray(data.playlist) && data.playlist.length > 0) {
-            this.playlist = data.playlist;
+            // Ensure all videos have the enableFade property with a default value
+            this.playlist = data.playlist.map(video => ({
+                ...video,
+                enableFade: video.enableFade !== undefined ? video.enableFade : true
+            }));
+            
             this.currentIndex = Math.max(0, Math.min(data.currentIndex || 0, this.playlist.length - 1));
             this.loopEnabled = data.loopEnabled || false;
+            
             
             this.notifyPlaylistChange();
             this.notifyCurrentIndexChange();
@@ -119,6 +126,7 @@ export class PlaylistManager {
             startTime: videoData.startTime || 0,
             endTime: videoData.endTime || null,
             title: videoData.title || `Video ${this.playlist.length + 1}`,
+            enableFade: videoData.enableFade !== undefined ? videoData.enableFade : true, // Default to true if not specified
             dateAdded: new Date().toISOString()
         };
         
@@ -218,6 +226,7 @@ export class PlaylistManager {
             startTime: videoData.startTime || 0,
             endTime: videoData.endTime || null,
             title: videoData.title || existingVideo.title,
+            enableFade: videoData.enableFade !== undefined ? videoData.enableFade : (existingVideo.enableFade !== undefined ? existingVideo.enableFade : true), // Preserve existing or default to true
             dateModified: new Date().toISOString()
         };
         
@@ -238,6 +247,7 @@ export class PlaylistManager {
         
         // Update the video
         this.playlist[index] = updatedVideo;
+        
         
         // Save to storage
         this.saveToStorage();
@@ -657,6 +667,7 @@ export class PlaylistManager {
                         ...video,
                         id: video.id || generateId(),
                         videoId: extractVideoId(video.url),
+                        enableFade: video.enableFade !== undefined ? video.enableFade : true, // Default to true if not specified
                         dateAdded: video.dateAdded || new Date().toISOString()
                     });
                 } else {

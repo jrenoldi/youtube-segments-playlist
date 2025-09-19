@@ -18,6 +18,7 @@ export class TransitionScreen {
             emphasisThreshold: options.emphasisThreshold || 5, // Last 5 seconds get emphasis
             fadeInDuration: options.fadeInDuration || 300, // Fade in animation duration
             fadeOutDuration: options.fadeOutDuration || 300, // Fade out animation duration
+            enabled: options.enabled !== false, // Default to enabled
             ...options
         };
         
@@ -79,6 +80,11 @@ export class TransitionScreen {
      * @returns {Promise} - Resolves when countdown completes
      */
     async showTransition(nextVideo, duration) {
+        if (!this.config.enabled) {
+            devLog('Transitions disabled, skipping transition screen');
+            return Promise.resolve();
+        }
+        
         if (this.isVisible) {
             devLog('Transition screen already visible, skipping');
             return Promise.resolve();
@@ -317,6 +323,15 @@ export class TransitionScreen {
             totalDuration: this.totalDuration,
             emphasisThreshold: this.config.emphasisThreshold
         };
+    }
+
+    /**
+     * Enable or disable transition effects
+     * @param {boolean} enabled - Whether to enable transitions
+     */
+    setEnabled(enabled) {
+        this.config.enabled = enabled;
+        devLog(`Transition screen ${enabled ? 'enabled' : 'disabled'}`);
     }
 
     /**

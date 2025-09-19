@@ -257,7 +257,7 @@ export class YouTubeSegmentsEngine {
                 
                 // Play crowd cheers audio during transition if enabled
                 let audioPromise = Promise.resolve();
-                if (this.config.enableAudioEffects && this.audioManager) {
+                if (this.config.enableAudioEffects && this.config.enableTransitionScreen && this.audioManager) {
                     devLog('🎉 Playing crowd cheers audio during transition...');
                     audioPromise = this.audioManager.playCrowdCheers();
                 }
@@ -273,15 +273,6 @@ export class YouTubeSegmentsEngine {
             } catch (error) {
                 console.error('Error during transition:', error);
                 // Continue with segment transition even if transition fails
-            }
-        } else if (this.config.enableAudioEffects && this.audioManager) {
-            // If no transition screen but audio is enabled, just play audio
-            try {
-                devLog('🎉 Playing crowd cheers audio...');
-                await this.audioManager.playCrowdCheers();
-                devLog('🎉 Crowd cheers audio finished');
-            } catch (error) {
-                console.error('Failed to play crowd cheers audio:', error);
             }
         }
         
@@ -889,6 +880,21 @@ export class YouTubeSegmentsEngine {
         }
         
         this.emit('engine:fadeOutDurationChanged', { duration });
+    }
+
+    /**
+     * Enable or disable transition effects
+     * @param {boolean} enabled - Whether to enable transition effects
+     */
+    setTransitionEnabled(enabled) {
+        this.config.enableTransitionScreen = enabled;
+        
+        // Update transition screen if it exists
+        if (this.transitionScreen) {
+            this.transitionScreen.setEnabled(enabled);
+        }
+        
+        this.emit('engine:transitionToggled', { enabled });
     }
 
     /**
