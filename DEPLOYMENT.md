@@ -119,9 +119,9 @@ Once deployed, access these specific features:
 ## 🎵 Audio Files
 
 Your audio files will be served from:
-- `https://your-project.vercel.app/examples/assets/crowd-cheers.wav`
+- `https://your-project.vercel.app/assets/crowd-cheers.wav`
 
-Make sure the `examples/assets/` directory is included in your deployment.
+Make sure the `assets/` directory is included in your deployment.
 
 ## 🔄 Automatic Deployments
 
@@ -146,7 +146,7 @@ Vercel provides:
    - Ensure all required files are committed
 
 2. **Audio Not Playing**:
-   - Verify `examples/assets/crowd-cheers.wav` exists
+   - Verify `assets/crowd-cheers.wav` exists
    - Check browser console for CORS errors
 
 3. **YouTube Videos Not Loading**:

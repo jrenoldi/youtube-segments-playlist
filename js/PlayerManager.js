@@ -216,8 +216,11 @@ export class PlayerManager {
             
             devLog('🎬 Loading video:', videoData.title);
             
-            // Handle volume based on fade settings
-            if (this.enableVolumeFade) {
+            // Handle volume based on fade settings (per-segment or global)
+            const segmentFadeEnabled = videoData.enableFade !== undefined ? videoData.enableFade : this.enableVolumeFade;
+            
+            
+            if (segmentFadeEnabled) {
                 // Start with volume 0 for fade-in effect
                 this.player.setVolume(0);
                 this.player.loadVideoById(loadOptions);
@@ -509,8 +512,10 @@ export class PlayerManager {
         const currentTime = this.getCurrentTime();
         const endTime = this.currentVideoData.endTime;
         
-        // Check if we should start fade-out
-        if (this.enableVolumeFade) {
+        // Check if we should start fade-out (per-segment or global)
+        const segmentFadeEnabled = this.currentVideoData.enableFade !== undefined ? this.currentVideoData.enableFade : this.enableVolumeFade;
+        
+        if (segmentFadeEnabled) {
             const fadeOutStartTime = endTime - this.fadeOutDuration;
             if (currentTime >= fadeOutStartTime && !this.hasSegmentEnded && !this.isVolumeFading()) {
                 devLog('🎵 Starting fade-out for segment end');

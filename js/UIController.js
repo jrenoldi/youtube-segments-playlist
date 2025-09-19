@@ -32,6 +32,7 @@ export class UIController {
         this.onLoopToggleCallback = null;
         this.onLoadPlaylistCallback = null;
         this.onSavePlaylistCallback = null;
+        this.onTransitionToggleCallback = null;
         
         this.init();
     }
@@ -63,6 +64,8 @@ export class UIController {
             nextBtn: getElementById('next-btn'),
             loopBtn: getElementById('loop-btn'),
             loopStatus: getElementById('loop-status'),
+            transitionsBtn: getElementById('transitions-btn'),
+            transitionsStatus: getElementById('transitions-status'),
             
             // Status elements
             currentInfo: getElementById('current-info'),
@@ -125,6 +128,26 @@ export class UIController {
         
         this.addEventListenerSafe(this.elements.playlistFileInput, 'change', (e) => {
             this.handleFileSelect(e);
+        });
+        
+        // Transition settings
+        this.addEventListenerSafe(this.elements.transitionsBtn, 'click', () => {
+            if (this.onTransitionToggleCallback) {
+                const currentState = this.getTransitionEnabled();
+                const newState = !currentState;
+                
+                console.log('Transition button clicked:', { currentState, newState });
+                console.log('transitionsStatus element:', this.elements.transitionsStatus);
+                console.log('transitionsStatus textContent:', this.elements.transitionsStatus?.textContent);
+                
+                // Update UI button text immediately
+                this.setTransitionEnabled(newState);
+                
+                console.log('After setTransitionEnabled:', this.elements.transitionsStatus?.textContent);
+                
+                // Notify engine of the change
+                this.onTransitionToggleCallback(newState);
+            }
         });
         
     }
@@ -306,6 +329,30 @@ export class UIController {
     setPlaylistName(name) {
         if (this.elements.playlistName) {
             this.elements.playlistName.value = name || '';
+        }
+    }
+
+    /**
+     * Get transition setting
+     * @returns {boolean} - Whether transitions are enabled
+     */
+    getTransitionEnabled() {
+        return this.elements.transitionsStatus?.textContent === 'ON';
+    }
+
+    /**
+     * Set transition setting
+     * @param {boolean} enabled - Whether to enable transitions
+     */
+    setTransitionEnabled(enabled) {
+        console.log('setTransitionEnabled called with:', enabled);
+        console.log('transitionsStatus element:', this.elements.transitionsStatus);
+        
+        if (this.elements.transitionsStatus) {
+            this.elements.transitionsStatus.textContent = enabled ? 'ON' : 'OFF';
+            console.log('Updated textContent to:', this.elements.transitionsStatus.textContent);
+        } else {
+            console.log('transitionsStatus element not found!');
         }
     }
 
@@ -711,6 +758,14 @@ export class UIController {
         this.onSavePlaylistCallback = callback;
     }
 
+    /**
+     * Set transition toggle callback
+     * @param {Function} callback - Callback function
+     */
+    onTransitionToggle(callback) {
+        this.onTransitionToggleCallback = callback;
+    }
+
     /* ==========================================================================
        Utility Methods
        ========================================================================== */
@@ -788,5 +843,6 @@ export class UIController {
         this.onLoopToggleCallback = null;
         this.onLoadPlaylistCallback = null;
         this.onSavePlaylistCallback = null;
+        this.onTransitionToggleCallback = null;
     }
 }

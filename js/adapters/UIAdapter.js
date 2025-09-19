@@ -201,8 +201,13 @@ export class UIAdapter {
         this.uiController.onLoadPlaylist((playlistData) => {
             const result = this.engine.importPlaylist(JSON.stringify(playlistData));
             
-            if (result.success && playlistData.name) {
-                this.uiController.setPlaylistName(playlistData.name);
+            if (result.success) {
+                if (playlistData.name) {
+                    this.uiController.setPlaylistName(playlistData.name);
+                }
+                if (playlistData.enableTransitions !== undefined) {
+                    this.uiController.setTransitionEnabled(playlistData.enableTransitions);
+                }
             }
         });
 
@@ -220,6 +225,7 @@ export class UIAdapter {
                 const playlistData = {
                     ...exportData,
                     name: playlistName,
+                    enableTransitions: this.uiController.getTransitionEnabled(),
                     createdAt: new Date().toISOString(),
                     totalVideos: this.engine.getPlaylistLength()
                 };
@@ -237,6 +243,15 @@ export class UIAdapter {
                 this.uiController.showError('Failed to save playlist');
             }
         });
+
+        // Transition settings
+        this.uiController.onTransitionToggle((enabled) => {
+            this.engine.setTransitionEnabled(enabled);
+        });
+        
+        // Initialize transition state - sync UI with engine
+        const initialTransitionState = this.uiController.getTransitionEnabled();
+        this.engine.setTransitionEnabled(initialTransitionState);
 
         devLog('UI events connected to engine');
     }
