@@ -136,6 +136,17 @@ export class VideoSegmentModal {
                                     <input type="text" class="form-control" id="video-title" 
                                            placeholder="Custom title for this segment">
                                 </div>
+                                
+                                <!-- Fade Effect Section -->
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="enable-fade" checked>
+                                        <label class="form-check-label fw-semibold" for="enable-fade">
+                                            <i class="bi bi-volume-up me-1"></i>Enable Volume Fade Effect
+                                        </label>
+                                        <div class="form-text">Smoothly fade in/out audio at segment start/end</div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         
@@ -170,6 +181,7 @@ export class VideoSegmentModal {
             startTime: getElementById('start-time'),
             endTime: getElementById('end-time'),
             videoTitle: getElementById('video-title'),
+            enableFade: getElementById('enable-fade'),
             validateBtn: getElementById('validate-video-btn'),
             setCurrentStartBtn: getElementById('set-current-start'),
             setCurrentEndBtn: getElementById('set-current-end'),
@@ -423,6 +435,7 @@ export class VideoSegmentModal {
     handleFormSubmit() {
         const formData = this.getFormData();
         
+        
         if (!this.validateFormData(formData)) {
             return;
         }
@@ -446,12 +459,16 @@ export class VideoSegmentModal {
      * @returns {Object} - Form data object
      */
     getFormData() {
-        return {
+        const formData = {
             url: this.elements.videoUrl?.value?.trim() || '',
             startTime: parseInt(this.elements.startTime?.value) || 0,
             endTime: this.elements.endTime?.value ? parseInt(this.elements.endTime.value) : null,
-            title: this.elements.videoTitle?.value?.trim() || ''
+            title: this.elements.videoTitle?.value?.trim() || '',
+            enableFade: this.elements.enableFade?.checked || false // Explicitly default to false if checkbox doesn't exist
         };
+        
+        
+        return formData;
     }
 
     /**
@@ -488,10 +505,21 @@ export class VideoSegmentModal {
             return;
         }
         
+        
         if (this.elements.videoUrl) this.elements.videoUrl.value = data.url || '';
         if (this.elements.startTime) this.elements.startTime.value = data.startTime || 0;
         if (this.elements.endTime) this.elements.endTime.value = data.endTime || '';
         if (this.elements.videoTitle) this.elements.videoTitle.value = data.title || '';
+        if (this.elements.enableFade) {
+            // Handle undefined enableFade explicitly
+            let fadeValue;
+            if (data.enableFade === undefined) {
+                fadeValue = true; // Default to true for existing videos without the property
+            } else {
+                fadeValue = data.enableFade; // Use the actual value
+            }
+            this.elements.enableFade.checked = fadeValue;
+        }
         
         this.validateForm();
     }
@@ -504,6 +532,7 @@ export class VideoSegmentModal {
         if (this.elements.startTime) this.elements.startTime.value = '0';
         if (this.elements.endTime) this.elements.endTime.value = '';
         if (this.elements.videoTitle) this.elements.videoTitle.value = '';
+        if (this.elements.enableFade) this.elements.enableFade.checked = true; // Default to enabled
         
         this.validateForm();
     }
